@@ -28,17 +28,13 @@ rnaSeq_BC <- rnaSeq_BC[names(AUCs),]
 
 drug <- "2257"
 
-#  drug_assoc <- rankGeneDrugSensitivity(data = rnaSeq_BC,drugpheno = AUCs,single.type = T,nthread = 4)
-# # 
-#  drug_assoc_drug <- as.matrix(drug_assoc[[1]])
-#  class(drug_assoc_drug) <- "numeric"
-#  drug_assoc_drug <- drug_assoc_drug[order(drug_assoc_drug[,"fdr"],na.last = T),]
+drug_assoc <- rankGeneDrugSensitivity(data = rnaSeq_BC,drugpheno = AUCs,single.type = T,nthread = 4)
+ 
+drug_assoc_drug <- as.matrix(drug_assoc[[1]])
+class(drug_assoc_drug) <- "numeric"
+drug_assoc_drug <- drug_assoc_drug[order(drug_assoc_drug[,"fdr"],na.last = T),]
 #  head(drug_assoc_drug[order(drug_assoc_drug[,"estimate"],decreasing = T,na.last = T),])
-# # 
-# # 
-#  saveRDS(drug_assoc_drug,file = "univariate_associations_2257.rda")
 
-drug_assoc_drug <- readRDS("univariate_associations_2257.rda")
 drug_assoc_drug <- as.data.frame(drug_assoc_drug)
 drug_assoc_drug <- drug_assoc_drug[
   with(drug_assoc_drug, order(drug_assoc_drug[,"fdr"], -1*drug_assoc_drug[,"estimate"])),
@@ -94,21 +90,17 @@ ibxSubtypes <- names(rnaSeq_BC_subtypes)[which(rnaSeq_BC_subtypes==subtype)]
 
 drug <- "2257"
 
-#drug_assoc_subtype <- rankGeneDrugSensitivity(data = rnaSeq_BC[ibxSubtypes,],drugpheno = AUCs[ibxSubtypes],single.type = T,nthread = 4)
-# # 
-  #drug_assoc_drug_subtype <- as.matrix(drug_assoc_subtype[[1]])
-  #class(drug_assoc_drug_subtype) <- "numeric"
-  #drug_assoc_drug_subtype <- drug_assoc_drug_subtype[order(drug_assoc_drug_subtype[,"fdr"],na.last = T),]
-  #head(drug_assoc_drug_subtype[order(drug_assoc_drug_subtype[,"estimate"],decreasing = T,na.last = T),])
-# # 
-# # 
-  #saveRDS(drug_assoc_drug_subtype,file = paste("univariate_associations_2257",subtype,".rda",sep = ""))
+drug_assoc_subtype <- rankGeneDrugSensitivity(data = rnaSeq_BC[ibxSubtypes,],drugpheno = AUCs[ibxSubtypes],single.type = T,nthread = 4)
+ 
+drug_assoc_drug_subtype <- as.matrix(drug_assoc_subtype[[1]])
+class(drug_assoc_drug_subtype) <- "numeric"
+drug_assoc_drug_subtype <- drug_assoc_drug_subtype[order(drug_assoc_drug_subtype[,"fdr"],na.last = T),]
 
-  drug_assoc_drug_subtype <- readRDS(paste("univariate_associations_2257",subtype,".rda",sep = ""))
-  drug_assoc_drug_subtype <- as.data.frame(drug_assoc_drug_subtype)
-  drug_assoc_drug_subtype <- drug_assoc_drug_subtype[
-  with(drug_assoc_drug_subtype, order(drug_assoc_drug_subtype[,"fdr"], -1*drug_assoc_drug_subtype[,"estimate"])),
-  ]
+drug_assoc_drug_subtype <- readRDS(paste("DATA/univariate_associations_2257",subtype,".rda",sep = ""))
+drug_assoc_drug_subtype <- as.data.frame(drug_assoc_drug_subtype)
+drug_assoc_drug_subtype <- drug_assoc_drug_subtype[
+ with(drug_assoc_drug_subtype, order(drug_assoc_drug_subtype[,"fdr"], -1*drug_assoc_drug_subtype[,"estimate"])),
+]
 
 
 #############
@@ -193,14 +185,14 @@ dev.off()
 #TCGA
 
 
-samplesInfo <- read.csv("PANCAN_clinicalMatrix", header=T, row.names = 1, sep="\t",stringsAsFactors = F)
+samplesInfo <- read.csv("DATA/PANCAN_clinicalMatrix", header=T, row.names = 1, sep="\t",stringsAsFactors = F)
 
 TCGA_tissues <- table(samplesInfo$X_primary_site)
 
 TCGA_tissues_sub <-names(TCGA_tissues)[which(TCGA_tissues>500)]
 
 
-TCGA_expession_APC_C <- readRDS("TCGA_expession_APC_C.rda")
+TCGA_expession_APC_C <- readRDS("DATA/TCGA_expession_APC_C.rda")
 
 medians <- apply(TCGA_expession_APC_C,2,median)
 
@@ -276,20 +268,15 @@ dev.off()
 # Lung analysis
 
 
-load("lungData.RData")
+load("DATA/lungData.RData")
 
 
 drug_assoc_Lung <- rankGeneDrugSensitivity(data = rnaSeq_lung,drugpheno = AUCs_Lung[rownames(rnaSeq),"AUC",drop=F],single.type = T,nthread = 4)
 
-#  drug_assoc_drug_Lung <- as.matrix(drug_assoc_Lung[[1]])
-#  class(drug_assoc_drug_Lung) <- "numeric"
-#  drug_assoc_drug_Lung <- drug_assoc_drug_Lung[order(drug_assoc_drug_Lung[,"fdr"],na.last = T),]
-#  head(drug_assoc_drug_Lung[order(drug_assoc_drug_Lung[,"estimate"],decreasing = T,na.last = T),])
-# # 
-# # 
-#  saveRDS(drug_assoc_drug_Lung,file = "univariate_associations_2257_Lung.rda")
+drug_assoc_drug_Lung <- as.matrix(drug_assoc_Lung[[1]])
+class(drug_assoc_drug_Lung) <- "numeric"
+drug_assoc_drug_Lung <- drug_assoc_drug_Lung[order(drug_assoc_drug_Lung[,"fdr"],na.last = T),]
 
-drug_assoc_drug_Lung <- readRDS("univariate_associations_2257_Lung.rda")
 drug_assoc_drug_Lung <- as.data.frame(drug_assoc_drug_Lung)
 drug_assoc_drug_Lung <- drug_assoc_drug_Lung[
   with(drug_assoc_drug_Lung, order(drug_assoc_drug_Lung[,"fdr"], -1*drug_assoc_drug_Lung[,"estimate"])),
