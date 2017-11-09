@@ -28,7 +28,7 @@ rnaSeq_BC <- rnaSeq_BC[names(AUCs),]
 
 drug <- "2257"
 
-drug_assoc <- rankGeneDrugSensitivity(data = rnaSeq_BC,drugpheno = AUCs,single.type = T,nthread = 4)
+drug_assoc <- PharmacoGx:::rankGeneDrugSensitivity(data = rnaSeq_BC,drugpheno = AUCs,single.type = T,nthread = 4)
  
 drug_assoc_drug <- as.matrix(drug_assoc[[1]])
 class(drug_assoc_drug) <- "numeric"
@@ -90,7 +90,7 @@ ibxSubtypes <- names(rnaSeq_BC_subtypes)[which(rnaSeq_BC_subtypes==subtype)]
 
 drug <- "2257"
 
-drug_assoc_subtype <- rankGeneDrugSensitivity(data = rnaSeq_BC[ibxSubtypes,],drugpheno = AUCs[ibxSubtypes],single.type = T,nthread = 4)
+drug_assoc_subtype <- PharmacoGx:::rankGeneDrugSensitivity(data = rnaSeq_BC[ibxSubtypes,],drugpheno = AUCs[ibxSubtypes],single.type = T,nthread = 4)
  
 drug_assoc_drug_subtype <- as.matrix(drug_assoc_subtype[[1]])
 class(drug_assoc_drug_subtype) <- "numeric"
@@ -271,7 +271,7 @@ dev.off()
 load("DATA/lungData.RData")
 
 
-drug_assoc_Lung <- rankGeneDrugSensitivity(data = rnaSeq_lung,drugpheno = AUCs_Lung[rownames(rnaSeq),"AUC",drop=F],single.type = T,nthread = 4)
+drug_assoc_Lung <- PharmacoGx:::rankGeneDrugSensitivity(data = rnaSeq_lung,drugpheno = AUCs_Lung[rownames(rnaSeq),"AUC",drop=F],single.type = T,nthread = 4)
 
 drug_assoc_drug_Lung <- as.matrix(drug_assoc_Lung[[1]])
 class(drug_assoc_drug_Lung) <- "numeric"
