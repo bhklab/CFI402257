@@ -5,7 +5,7 @@ require(gplots)
 require(gridExtra)
 require(piano)
 
-setwd("./CFI402257/")
+setwd("~/Projects/SU2C/SU2C_biomarkers_analysis/2257_story/KelsiePaper/resistance_to_TTK_inhib/CFI402257/")
 
 
 ######################################################
@@ -13,14 +13,19 @@ setwd("./CFI402257/")
 # Prepare the data
 
 # load UHN Breast Cancer cell lines PSet: The molecular profiles are compiled from Marcotte et.al. 2016, Cell. The drug sensitivity data is measured in-house
-UHNBreast <- readRDS("DATA/UHNBreast.rda")
+UHNBreast <- readRDS("UHNBreast.rda")
+
+#load("~/Projects/PSets/PSets/UHN_kallisto.RData")
+#pp <- pData(UHN@molecularProfiles$rnaseq)
+#xx <- which(pp$type == "control" | is.na(pp$type))
+#UHN@molecularProfiles$rnaseq <- UHN@molecularProfiles$rnaseq[,xx]
+#UHNBreast <- UHN
 
 rnaSeq_BC <- t(exprs(summarizeMolecularProfiles(UHNBreast,mDataType = "rnaseq",fill.missing = F)))
 
-AUCs <- summarizeSensitivityProfiles(UHNBreast,sensitivity.measure = "AUC",fill.missing = F)
+AUCs <- summarizeSensitivityProfiles(UHNBreast,sensitivity.measure = "AUC",fill.missing = F,drugs = c("2257"))
 
 rnaSeq_BC <- rnaSeq_BC[names(AUCs),]
-
 
 #############################################################
 #############################################################
@@ -40,7 +45,7 @@ drug_assoc_drug <- drug_assoc_drug[
   with(drug_assoc_drug, order(drug_assoc_drug[,"fdr"], -1*drug_assoc_drug[,"estimate"])),
   ]
 
-
+saveRDS(drug_assoc_drug,"drug_assoc_drug.rda")
 
 #############
 # APC functional association with 2257
@@ -55,7 +60,8 @@ geneSetInfo <- cbind("g"=APC_genes_ENS, "s"=rep("APC_GeneSet",length(APC_genes_E
 
 gsc1 <- piano::loadGSC(geneSetInfo)
 
-drug_assoc_drug_NA <- drug_assoc_drug[!is.na(drug_assoc_drug[,"fdr"]),]
+drug_assoc_drug_NA <- drug_assoc_drug
+drug_assoc_drug_NA[is.na(drug_assoc_drug_NA[,"fdr"]),c("tstat","pvalue","fdr")] <- c(0,1,1)
 
 genelevelstats <- drug_assoc_drug_NA[,"tstat"]
 
